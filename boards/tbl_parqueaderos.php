@@ -32,7 +32,8 @@ class tbl_parqueaderos
      * @return array|bool Arreglo con todos los gastos o false en caso de error
      */
 	public static function getAll(){
-		$consulta="SELECT * FROM ".self::TABLE_NAME;
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="CALL sp_all_parqueaderos";
 
 		try{
 			//preparar sentencia
@@ -47,29 +48,50 @@ class tbl_parqueaderos
 		}
 	}
 
+	/**
+     * Obtiene todos las tarifas de la base de datos
+     * @return array|bool Arreglo con todos los gastos o false en caso de error
+     */
+	public static function getTarifaParqueaderoId($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="CALL sp_all_tarifas_parqueaderos(?);";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
+
+			return $comando->fetchAll(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
 
 	/**
      * Inserta un nuevo dato a la base de datos 
      */
 
-	public static function insertRow($monto, $etiqueta, $fecha, $descripcion){
+	public static function insertRow($codigocamaracomercio, $razonsocial, $telefono, $direccion, $usuarioid, $latitud, $longitud, $foto, $descripcion){
 		try {
 			$pdo = DatabaseConnection::getInstance()->getDb();
 			// Sentencia INSERT
-            $comando = "INSERT INTO " . self::TABLE_NAME . " ( " .
-                self::MONTO . "," .
-                self::ETIQUETA . "," .
-                self::FECHA . "," .
-                self::DESCRIPCION . ")" .
-                " VALUES(?,?,?,?)";
+            $comando = "INSERT INTO tbl_parqueaderos(CodigoCamaraComercio,RazonSocial,TELEFONO,DIRECCION,usuario_id,UbicacionLat,ubicacionLon,Foto,Descripcion) VALUES (?,?,?,?,?,?,?,?,?);";
 
             $sentencia = $pdo->prepare($comando);
 
             /*Ejecuto la sentencia para insertar el valor*/
             $sentencia->execute(
-            	array($monto,
-            		$etiqueta,
-            		$fecha,
+            	array($codigocamaracomercio,
+            		$razonsocial,
+            		$telefono,
+            		$direccion,
+            		$usuarioid, 
+            		$latitud,
+            		$longitud,
+            		$foto, 
             		$descripcion
             	)
             );
@@ -82,6 +104,35 @@ class tbl_parqueaderos
 		}
 	}
 
+	/**
+	*Insertar una nueva reservar por parte del cliente
+	**/
+	public static function insertReserva($usuario_id, $parqueadero_id, $fechaHoraReserva, $tiempollegada, $tipoVehiculo_id){
+		try {
+			$pdo = DatabaseConnection::getInstance()->getDb();
+			// Sentencia INSERT
+            $comando = "INSERT INTO tbl_reserva(usuario_id, parqueadero_id, fechaHoraReserva, tiempoLlegada, tipovehiculo_id)
+ 				VALUES (?,?,?,?,?);";
+
+            $sentencia = $pdo->prepare($comando);
+
+            /*Ejecuto la sentencia para insertar el valor*/
+            $sentencia->execute(
+            	array($usuario_id,
+            		$parqueadero_id,
+            		$fechaHoraReserva,
+            		$tiempollegada,
+            		$tipoVehiculo_id
+            	)
+            );
+
+            // Retornar en el último id insertado
+            return $pdo->lastInsertId();
+            
+		} catch (PDOException $e) {
+			return false;
+		}
+	}
 
 }
 ?>
