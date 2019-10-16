@@ -69,6 +69,107 @@ class tbl_parqueaderos
 		}
 	}
 
+	/**
+     * Obtiene la cantidad de parqueaderos que tiene un usuario
+     */
+	public static function getNumeroParqueaderos($usuario_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="SELECT COUNT(tbl_parqueaderos.id) AS cantidad FROM tbl_parqueaderos WHERE tbl_parqueaderos.usuario_id = ?;";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($usuario_id));
+
+			return $comando->fetch(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
+
+	/**
+     * Obtiene la cantidad de parqueaderos que tiene un usuario
+     */
+	public static function getParqueaderoId($usuario_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="SELECT * FROM tbl_parqueaderos WHERE usuario_id = ?;";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($usuario_id));
+
+			return $comando->fetch(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+	
+
+	/**
+     * Obtiene los horarios del parqueaderos que tiene un usuario
+     */
+	public static function getHorarioParqueadero($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="SELECT * FROM tbl_horarios WHERE parqueadero_id = ?;";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
+
+			return $comando->fetchAll(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
+	/**
+     * Obtiene las tarifas del parqueaderos que tiene un usuario
+     */
+	public static function getTarifasParqueadero($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="CALL sp_tarifas_parqueadero(?);";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
+
+			return $comando->fetchAll(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+	
+	/**
+     * Obtiene las capacidades del parqueaderos que tiene un usuario
+     */
+	public static function getCapacidadParqueadero($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="SELECT * FROM tbl_capacidades WHERE parqueadero_id = ?;";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
+
+			return $comando->fetchAll(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
 
 	/**
      * Inserta un nuevo dato a la base de datos 
