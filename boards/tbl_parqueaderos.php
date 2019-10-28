@@ -156,7 +156,7 @@ class tbl_parqueaderos
      */
 	public static function getCapacidadParqueadero($parqueadero_id){
 		//$consulta="SELECT * FROM ".self::TABLE_NAME;
-		$consulta="SELECT * FROM tbl_capacidades WHERE parqueadero_id = ?;";
+		$consulta="CALL sp_capacidad_zonas_parqueaderos(?);";
 
 		try{
 			//preparar sentencia

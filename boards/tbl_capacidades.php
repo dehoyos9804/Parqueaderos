@@ -86,5 +86,22 @@ class tbl_capacidades
 		}
 	}
 
+	/**
+     * Actualiza un registro de la bases de datos basado
+     * en los nuevos valores relacionados con un identificador
+     */
+    public static function updateZonas($idzona, $estado){
+        // Creando consulta UPDATE
+        $consulta = "CALL sp_update_estado_zonas(?,?)";
+        // Preparar la sentencia
+        $comando = DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+        // Relacionar y ejecutar la sentencia
+        $comando->execute(
+            array($idzona,$estado)
+        );
+
+        return $comando;
+    }
+
 }
 ?>
