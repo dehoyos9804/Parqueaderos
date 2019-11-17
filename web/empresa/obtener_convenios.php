@@ -6,9 +6,7 @@
 
 //constantes para la construcción de respuestas 
 const ESTADO="estado";
-const DATOS="tbl_parqueaderos";
-const PARQUEADERO = "tblparqueaderos";
-const HORARIO = "tbl_horarios";
+const DATOS="tbl_empresas";
 const MENSAJE="mensaje";
 const IDENTIFICADOR = "parqueadero_id";
 
@@ -16,16 +14,14 @@ const CODIGO_EXITO = 1;
 const CODIGO_FALLO = 2;
 const CODIGO_FALLO2 = 3;
 
-require '../../boards/tbl_parqueaderos.php';
+require '../../boards/tbl_empresas.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 	if (isset($_GET[IDENTIFICADOR])){
 		// Obtener parámetro idMeta
 		$parametro = $_GET[IDENTIFICADOR];
 		// Tratar retorno
-		$retorno = tbl_parqueaderos::getTarifaParqueaderoId($parametro);
-		$parking = tbl_parqueaderos::getParqueaderoById($parametro);
-		$horario = tbl_parqueaderos::getHorarioParqueadero($parametro);
+		$retorno = tbl_empresas::getConveniosParqueaderos($parametro);
 
 		//Definir tipo de respuesta 
 	    header('Content-Type: application/json');
@@ -33,8 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 	    if ($retorno) {
 	    	$datos[ESTADO] = CODIGO_EXITO;
 	    	$datos[DATOS] = $retorno;
-	    	$datos[PARQUEADERO] = $parking;
-	    	$datos[HORARIO] = $horario;
 	    	// Enviar objeto json
             print json_encode($datos);
 	    }else{

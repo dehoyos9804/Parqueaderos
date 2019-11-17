@@ -3,7 +3,7 @@
  * Representa los datos de los registros
  * almacenados en la base de datos
  */
-require '../data/DatabaseConnection.php';
+require '../../data/DatabaseConnection.php';
 
 /**
 * 
@@ -27,6 +27,29 @@ class tbl_registros
 	{
 		
 	}
+
+	/**
+     * Obtiene todos las tarifas de la base de datos
+     * @return array|bool Arreglo con todos los gastos o false en caso de error
+     */
+	public static function getReporteDeVenta($parqueadero_id, $fechainicial, $fechafinal){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="CALL sp_reportes_venta(?,?,?);";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id, $fechainicial, $fechafinal));
+
+			return $comando->fetchAll(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
+	
 
 }
 ?>

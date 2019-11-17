@@ -6,9 +6,8 @@
 
 //constantes para la construcción de respuestas 
 const ESTADO="estado";
-const DATOS="tbl_parqueaderos";
-const PARQUEADERO = "tblparqueaderos";
-const HORARIO = "tbl_horarios";
+const HORARIOS = "tbl_horarios";
+const CAPACIDAD = "tbl_capacidad";
 const MENSAJE="mensaje";
 const IDENTIFICADOR = "parqueadero_id";
 
@@ -23,18 +22,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 		// Obtener parámetro idMeta
 		$parametro = $_GET[IDENTIFICADOR];
 		// Tratar retorno
-		$retorno = tbl_parqueaderos::getTarifaParqueaderoId($parametro);
-		$parking = tbl_parqueaderos::getParqueaderoById($parametro);
-		$horario = tbl_parqueaderos::getHorarioParqueadero($parametro);
+		$retorno = tbl_parqueaderos::getHorarioParqueadero($parametro);
 
+		
 		//Definir tipo de respuesta 
 	    header('Content-Type: application/json');
 
 	    if ($retorno) {
+	    	$capacidad = tbl_parqueaderos::getCapacidadParqueadero($parametro);
+
 	    	$datos[ESTADO] = CODIGO_EXITO;
-	    	$datos[DATOS] = $retorno;
-	    	$datos[PARQUEADERO] = $parking;
-	    	$datos[HORARIO] = $horario;
+	    	$datos[HORARIOS] = $retorno;
+	    	$datos[CAPACIDAD] = $capacidad;
 	    	// Enviar objeto json
             print json_encode($datos);
 	    }else{

@@ -70,6 +70,27 @@ class tbl_parqueaderos
 	}
 
 	/**
+     * Obtiene todos las tarifas de la base de datos
+     * @return array|bool Arreglo con todos los gastos o false en caso de error
+     */
+	public static function getImagenParqueadero($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="CALL sp_imagen_parqueadero(?);";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
+
+			return $comando->fetch(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
+	/**
      * Obtiene la cantidad de parqueaderos que tiene un usuario
      */
 	public static function getNumeroParqueaderos($usuario_id){
@@ -95,13 +116,33 @@ class tbl_parqueaderos
      */
 	public static function getParqueaderoId($usuario_id){
 		//$consulta="SELECT * FROM ".self::TABLE_NAME;
-		$consulta="SELECT * FROM tbl_parqueaderos WHERE usuario_id = ?;";
+		$consulta="SELECT id, CodigoCamaraComercio, RazonSocial,TELEFONO, DIRECCION,usuario_id, UbicacionLat,UbicacionLon,Descripcion FROM tbl_parqueaderos WHERE usuario_id = ?;";
 
 		try{
 			//preparar sentencia
 			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
 			//ejecutar secuencia preparada
 			$comando->execute(array($usuario_id));
+
+			return $comando->fetch(PDO::FETCH_ASSOC);
+
+		}catch(PDOException $e){
+			return false;
+		}
+	}
+
+	/**
+     * Obtiene la cantidad de parqueaderos que tiene un usuario
+     */
+	public static function getParqueaderoById($parqueadero_id){
+		//$consulta="SELECT * FROM ".self::TABLE_NAME;
+		$consulta="SELECT id, CodigoCamaraComercio, RazonSocial,TELEFONO, DIRECCION,usuario_id, UbicacionLat,UbicacionLon,Descripcion FROM tbl_parqueaderos WHERE id = ?;";
+
+		try{
+			//preparar sentencia
+			$comando=DatabaseConnection::getInstance()->getDb()->prepare($consulta);
+			//ejecutar secuencia preparada
+			$comando->execute(array($parqueadero_id));
 
 			return $comando->fetch(PDO::FETCH_ASSOC);
 

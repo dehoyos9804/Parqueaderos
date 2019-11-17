@@ -16,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	// Decodificando formato Json
     $body = json_decode(file_get_contents("php://input"), true);
 
+    $user = $body['usuarioid'];
+
+    $path = "../../web/parqueadero/image/img-$user.jpg";
+    $local_host = "localhost";
+    $url = "http://$local_host/Parqueaderos/$path";
+
+    $imagen = $body['foto'];
+    file_put_contents($path, base64_decode($imagen));//guardo la imagen en mi directorio
+    $bytesArchivo = file_get_contents($path);
     // Insertar meta
     $retorno = tbl_parqueaderos::insertRow(
     	         $body['codigocamaracomercio'],
@@ -25,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                  $body['usuarioid'],
                  $body['latitud'],
                  $body['longitud'],
-                 $body['foto'],
+                 $bytesArchivo,
                  $body['descripcion']
                 );
 
