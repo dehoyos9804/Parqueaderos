@@ -45,11 +45,12 @@ class tbl_registros
 			return $comando->fetchAll(PDO::FETCH_ASSOC);
 
 		}catch(PDOException $e){
+			
 			return false;
 		}
 	}
 
-	
+
 
 }
 ?>

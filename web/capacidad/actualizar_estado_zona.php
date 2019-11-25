@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         print json_encode(
             array(
                 ESTADO => CODIGO_EXITO,
-                MENSAJE => 'Zona '.$body['idzona'].' '.$body['estado'])
+                MENSAJE => 'Zona '.$body['numero_zona'])
         );
     } else {
         // Código de falla
