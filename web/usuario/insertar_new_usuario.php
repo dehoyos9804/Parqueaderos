@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                  $body['tipousuario']
                 );
 
+    header("Content-Type: application/json");
     if ($retorno) {
         // Código de éxito
         print json_encode(
@@ -38,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         );
 
     } else {
-    	header("Content-Type: application/json");
         // Código de falla
         print json_encode(
             array(
